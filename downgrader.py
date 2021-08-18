@@ -14,10 +14,6 @@ username = ""
 password = ""
 
 
-def on_read_error(func,path,exc_info):
-    os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
-
 def password_input(prompt:str = "") -> str: #stolen from Stackoverflow ;)
     p_s = ''
     proxy_string = [' '] * 64
@@ -123,7 +119,6 @@ def download_depot():
     
 
 def ask_polish(ask:bool=False):
-
     answers = ['n','y']
     ans = ""
     first = True
@@ -139,6 +134,7 @@ def ask_polish(ask:bool=False):
     if ans == "y": 
         return True
     return False
+
 
 def ask_download(ask:bool=False):
     answers = ['n','y']
@@ -157,6 +153,7 @@ def ask_download(ask:bool=False):
         return True
     return False
 
+
 def download_polish(username:str,password:str):
     cwd = os.getcwd() + "\\tmp"
     cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091502 -manifest 4734006406066421322 -username " + username + " -password " + password
@@ -169,9 +166,8 @@ def download_polish(username:str,password:str):
             return False
     return True
 
+
 def download_game(username:str,password:str):
-
-
     cwd = os.getcwd() + "\\tmp"
     cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091501 -manifest 6404500526474240765 -username " + username + " -password " + password
     try:
@@ -182,6 +178,7 @@ def download_game(username:str,password:str):
             print("Please restart the script.")
             return False
     return True
+
 
 def transfer_files(polish:bool,game:bool,ask:bool=False): 
     if ask:
@@ -225,23 +222,15 @@ def delete_temp_files():
     time.sleep(1)    
     print("deleted temp files    ", flush=True)
 
+
 def main():
-#[[--dotnet
+#dependencies
     download_dotnet()
-#--]]
-
-#[[--depot
     download_depot()
-#--]]
 
-#[[--polish voice?
-    
+#asking to download
     polish = ask_polish()
-#--]]
-
-#[[--download 1.12?
     game = ask_download()
-#--]]
 
     if polish or game:
         username = input("Please enter your Steam username: ")

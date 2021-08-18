@@ -178,39 +178,53 @@ def download_game(username:str,password:str) -> bool:
             return False
     return True
 
+def fast_scandir(dirname):
+    subfolders= [f.path for f in os.scandir(dirname) if f.is_dir()]
+    for dirname in list(subfolders):
+        subfolders.extend(fast_scandir(dirname))
+    return subfolders
 
 def transfer_files(polish:bool,game:bool,ask:bool=False): 
     if ask:
         polish = ask_polish(True)
         game = ask_download(True)
-
+    cwd = os.getcwd() + "\\depots"
+    game_dir = os.getcwd() + "\\Cyberpunk"
     if game or polish:
-        cwd = os.getcwd() + "\\depots"
-        game_dir = os.getcwd() + "\\Cyberpunk"
         try:
             os.mkdir(game_dir)
         except FileExistsError:
             sys.stdout.write("")
 
-   
+    dir_game = fast_scandir(cwd + "\\1091501")[0]
+    dir_pol =  fast_scandir(cwd + "\\1091502")[0]
+
     if game:
         try:
-            all_files = os.listdir(cwd+"\\1091501\\6840310\\")
+            all_files = os.listdir(dir_game)
             for f in all_files:
-                shutil.move(cwd+"\\1091501\\6840310\\" + f, game_dir + "\\" + f)
-        except FileNotFoundError:
-            sys.stdout.write("")
+                shutil.move(dir_game + "\\" + f, game_dir + "\\" + f)
+        except FileNotFoundError as e:
+            print("skipping game files." + str(e))
         except Exception as e:
             print(e)
     if polish:
         try:
-            shutil.move(cwd+"\\1091502\\6840310\\archive\\pc\\content\\lang_pl_voice.archive", game_dir+"\\archive\\pc\\content\\lang_pl_voice.archive")
-        except FileNotFoundError:
-            sys.stdout.write("")
+            shutil.move(dir_pol + "\\archive\\pc\\content\\lang_pl_voice.archive", game_dir+"\\archive\\pc\\content\\lang_pl_voice.archive")
+        except FileNotFoundError as e:
+            print("skipping game files." + str(e))
+        except Exception as e:
+            print(e)
 
 
 def delete_temp_files():
-    print("deleting temp files.",end = "\r", flush=True)
+    print("detecting if game files are where they should be",end = '\r', flush=True)
+    time.sleep(1)
+    cwd = os.getcwd()
+    if not os.listdir(cwd + "\\Cyberpunk"):
+        print("files have not been moved into the \"Cyberpunk\" directory.", flush=True)
+        return
+    print("deleting temp files.                            ",end = "\r", flush=True)
     cwd = os.getcwd()
     time.sleep(1)
     print("deleting temp files..",end = "\r", flush=True)
@@ -243,19 +257,19 @@ def main():
         print("i see you didn't download any of the files, if you already downloaded\nthem but didnt have them move you can choose which ones you want to move now.")
         transfer_files(polish,game,True)
     transfer_files(polish,game)
-    if not success:
-        answers = ['n','y']
-        ans = ""
-        first = True
-        while ans.lower() not in answers:
-            if not first:
-                print("please enter a valid answer", flush=True)
-            print("Would you like to clear temp files? [y/n]: ",end = "", flush=True)
-            ans = input()
-            first = False
-        if ans == "y":
-            success = True
-    if success:
+    answers = ['n','y']
+    delete = False
+    ans = ""
+    first = True
+    while ans.lower() not in answers:
+        if not first:
+            print("please enter a valid answer", flush=True)
+        print("Would you like to clear temp files? [y/n]: ",end = "", flush=True)
+        ans = input()
+        first = False
+    if ans == "y":
+        delete = True
+    if delete:
         delete_temp_files()
     os.system('pause')
     

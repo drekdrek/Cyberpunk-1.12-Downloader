@@ -1,8 +1,7 @@
-from getpass import getpass
 from urllib.request import urlretrieve
 from zipfile import ZipFile
 from pathlib import Path
-import subprocess, sys, msvcrt, math, os, time, shutil, stat
+import subprocess, sys, msvcrt, math, os, time, shutil
 
 
 #CP2077 Downgrader
@@ -33,8 +32,8 @@ def password_input(prompt:str = "") -> str: #stolen from Stackoverflow ;)
     return p_s
 
 
-#checks if dotnet is installed
-def parse_tuple_ver(tup:tuple, ver_want:str):
+#parses the tuple of versions and detects if ver_want is included
+def parse_tuple_ver(tup:tuple, ver_want:str) -> bool:
     new_lst2 = []
     lst = list(tup)
     new_lst = lst[1].split("\n")
@@ -118,7 +117,7 @@ def download_depot():
         time.sleep(1)
     
 
-def ask_polish(ask:bool=False):
+def ask_polish(ask:bool=False) -> bool:
     answers = ['n','y']
     ans = ""
     first = True
@@ -136,7 +135,7 @@ def ask_polish(ask:bool=False):
     return False
 
 
-def ask_download(ask:bool=False):
+def ask_download(ask:bool=False) -> bool:
     answers = ['n','y']
     ans = ""
     first = True
@@ -154,7 +153,7 @@ def ask_download(ask:bool=False):
     return False
 
 
-def download_polish(username:str,password:str):
+def download_polish(username:str,password:str) -> bool:
     cwd = os.getcwd() + "\\tmp"
     cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091502 -manifest 4734006406066421322 -username " + username + " -password " + password
     try:
@@ -167,7 +166,7 @@ def download_polish(username:str,password:str):
     return True
 
 
-def download_game(username:str,password:str):
+def download_game(username:str,password:str) -> bool:
     cwd = os.getcwd() + "\\tmp"
     cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091501 -manifest 6404500526474240765 -username " + username + " -password " + password
     try:

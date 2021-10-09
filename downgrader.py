@@ -6,7 +6,7 @@ import subprocess, sys, msvcrt, math, os, time, shutil
 
 #CP2077 Downgrader
 dotnet_link = r"https://download.visualstudio.microsoft.com/download/pr/c1bfbb13-ad09-459c-99aa-8971582af86e/61553270dd9348d7ba29bacfbb4da7bd/dotnet-sdk-5.0.400-win-x64.exe"
-depot_link  = r"https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.4.4/depotdownloader-2.4.4.zip"
+depot_link  = r"https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.4.5/depotdownloader-2.4.5.zip"
 #ver 1.12
 
 username = ""

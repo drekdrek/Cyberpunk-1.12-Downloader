@@ -212,7 +212,7 @@ def transfer_files(polish:bool,game:bool,ask:bool=False):
     try:
         dir_pol =  fast_scandir(cwd + "\\1091502")[0]
     except FileNotFoundError:
-        polish = false
+        polish = False
     finally:
         if polish:
             try:

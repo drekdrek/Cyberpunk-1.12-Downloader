@@ -195,26 +195,32 @@ def transfer_files(polish:bool,game:bool,ask:bool=False):
             os.mkdir(game_dir)
         except FileExistsError:
             sys.stdout.write("")
-
-    dir_game = fast_scandir(cwd + "\\1091501")[0]
-    dir_pol =  fast_scandir(cwd + "\\1091502")[0]
-
-    if game:
-        try:
-            all_files = os.listdir(dir_game)
-            for f in all_files:
-                shutil.move(dir_game + "\\" + f, game_dir + "\\" + f)
-        except FileNotFoundError as e:
-            print("skipping game files." + str(e))
-        except Exception as e:
-            print(e)
-    if polish:
-        try:
-            shutil.move(dir_pol + "\\archive\\pc\\content\\lang_pl_voice.archive", game_dir+"\\archive\\pc\\content\\lang_pl_voice.archive")
-        except FileNotFoundError as e:
-            print("skipping game files." + str(e))
-        except Exception as e:
-            print(e)
+    try:
+        dir_game = fast_scandir(cwd + "\\1091501")[0]
+    except FileNotFoundError:
+        game = False
+    finally:
+        if game:
+            try:
+                all_files = os.listdir(dir_game)
+                for f in all_files:
+                    shutil.move(dir_game + "\\" + f, game_dir + "\\" + f)
+            except FileNotFoundError as e:
+                print("skipping game files." + str(e))
+            except Exception as e:
+                print(e)
+    try:
+        dir_pol =  fast_scandir(cwd + "\\1091502")[0]
+    except FileNotFoundError:
+        polish = false
+    finally:
+        if polish:
+            try:
+                shutil.move(dir_pol + "\\archive\\pc\\content\\lang_pl_voice.archive", game_dir+"\\archive\\pc\\content\\lang_pl_voice.archive")
+            except FileNotFoundError as e:
+                print("skipping game files." + str(e))
+            except Exception as e:
+                print(e)
 
 
 def delete_temp_files():

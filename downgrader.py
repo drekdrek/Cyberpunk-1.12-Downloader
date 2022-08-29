@@ -6,31 +6,9 @@ import subprocess, sys, msvcrt, math, os, time, shutil
 
 #CP2077 Downgrader
 dotnet_link = r"https://download.visualstudio.microsoft.com/download/pr/c1bfbb13-ad09-459c-99aa-8971582af86e/61553270dd9348d7ba29bacfbb4da7bd/dotnet-sdk-5.0.400-win-x64.exe"
-depot_link  = r"https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.4.5/depotdownloader-2.4.5.zip"
+depot_link  = r"https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.4.7/depotdownloader-2.4.7.zip"
 #ver 1.12
-
 username = ""
-password = ""
-
-
-def password_input(prompt:str = "") -> str: #stolen from Stackoverflow ;)
-    p_s = ''
-    proxy_string = [' '] * 64
-    while True:
-        sys.stdout.write('\x0D' + prompt + ''.join(proxy_string))
-        c = msvcrt.getch()
-        if c == b'\r':
-            break
-        elif c == b'\x08':
-            p_s = p_s[:-1]
-            proxy_string[len(p_s)] = " "
-        else:
-            proxy_string[len(p_s)] = "*"
-            p_s += c.decode()
-
-    sys.stdout.write('\n')
-    return p_s
-
 
 #parses the tuple of versions and detects if ver_want is included
 def parse_tuple_ver(tup:tuple, ver_want:str) -> bool:
@@ -153,9 +131,9 @@ def ask_download(ask:bool=False) -> bool:
     return False
 
 
-def download_polish(username:str,password:str) -> bool:
+def download_polish(username:str) -> bool:
     cwd = os.getcwd() + "\\tmp"
-    cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091502 -manifest 4734006406066421322 -username " + username + " -password " + password
+    cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091502 -manifest 4734006406066421322 -username " + username + " -remember-password"
     try:
         subprocess.check_call(cmd)
     except Exception as e:
@@ -166,9 +144,9 @@ def download_polish(username:str,password:str) -> bool:
     return True
 
 
-def download_game(username:str,password:str) -> bool:
+def download_game(username:str) -> bool:
     cwd = os.getcwd() + "\\tmp"
-    cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091501 -manifest 6404500526474240765 -username " + username + " -password " + password
+    cmd = "dotnet " + "\"" + cwd + "\\DepotDownloader.dll" + "\"" + " -app 1091500 -depot 1091501 -manifest 6404500526474240765 -username " + username + " -remember-password"
     try:
         subprocess.check_call(cmd)
     except Exception as e:
@@ -253,12 +231,11 @@ def main():
 
     if polish or game:
         username = input("Please enter your Steam username: ")
-        password = password_input("Please enter your Steam password: ")
     success = False
     if polish:
-        success = download_polish(username,password)
+        success = download_polish(username)
     if game: 
-        success = download_game(username,password)
+        success = download_game(username)
     if not polish and not game:
         print("i see you didn't download any of the files, if you already downloaded\nthem but didnt have them move you can choose which ones you want to move now.")
         transfer_files(polish,game,True)
